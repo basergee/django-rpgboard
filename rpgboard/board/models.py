@@ -26,3 +26,19 @@ class Post(models.Model):
     content = models.TextField()
     upload = models.FileField(upload_to='uploads/')
     creation_time = models.DateTimeField(auto_now_add=True)
+
+
+class UserReply(models.Model):
+    # Пользователь, который оставил отклик
+    reply_author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    # Объявление, на которое оставлен отклик
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    # Текст отклика
+    content = models.TextField()
+
+    # Принят ли отклик пользователем, который создал объявление
+    is_accepted = models.BooleanField(default=False)
+
+    creation_time = models.DateTimeField(auto_now_add=True)
