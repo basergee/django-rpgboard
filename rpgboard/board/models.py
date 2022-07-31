@@ -16,7 +16,7 @@ class Post(models.Model):
         ('SM', 'Мастера заклинаний'),
     )
 
-    author = models.OneToOneField(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     post_type = models.CharField(
         max_length=2,
         choices=post_types,
