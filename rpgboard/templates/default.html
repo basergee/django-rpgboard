@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+        <!-- { load custom_filters }-->
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>
+            {% block title %}
+                Все объявления
+            {% endblock title %}
+        </title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    </head>
+    <body>
+        <!-- Responsive navbar-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'index' %}">Главная</a></li>
+                        {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'create_post' %}">Создать объявление</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'profile' %}">Личный кабинет</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Выйти</a></li>
+                        {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Войти</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Регистрация</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Page content-->
+        <div class="container">
+            <div class="text-center mt-5">
+                {% block content %}
+                    <h1>Все объявления</h1>
+                    {% if news_list %}
+                        <table>
+                            <!-- Выводим заголовки столбцов таблицы -->
+                            <tr>
+                                <th>Заголовок</th>
+                                <th>Дата публикации</th>
+                                <th>Содержание</th>
+                            </tr>
+                        {% for n in posts_list %}
+                            <tr>
+                                <td>{{ n.title }}</td>
+                                <td>{{ n.creation_time }}</td>
+                                <td>{{ n.content | truncatechars:20 }}</td>
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    {% else %}
+                    <h2>Объявлений нет!</h2>
+                    {% endif %}
+
+                    {# Информация о предыдущих страницах #}
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">1</a>
+                        {% if page_obj.previous_page_number != 1 %}
+                            ...
+                            <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                        {% endif %}
+                    {% endif %}
+
+                    {# Информация о текущей странице #}
+                    {{ page_obj.number }}
+
+                    {# Информация о следующих страницах #}
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                        {% if paginator.num_pages != page_obj.next_page_number %}
+                            ...
+                            <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+                        {% endif %}
+                    {% endif %}
+                {% endblock content %}
+            </div>
+        </div>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
