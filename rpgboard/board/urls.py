@@ -10,5 +10,6 @@ urlpatterns = [
     path('', IndexView.as_view(), name='signup'),
     path('', IndexView.as_view(), name='profile'),
     path('', IndexView.as_view(), name='create_post'),
+    path('edit/<int:pk>', IndexView.as_view(), name='edit_post'),
     path('reply/<int:pk>', IndexView.as_view(), name='create_reply'),
 ]

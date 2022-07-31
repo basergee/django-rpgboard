@@ -57,7 +57,11 @@
                                 <td>{{ n.creation_time }}</td>
                                 <td>{{ n.content | truncatechars:20 }}</td>
                                 {% if user.is_authenticated %}
-                                    <td><a class="nav-link" href="{% url 'create_reply' n.pk %}">Откликнуться</a></td>
+                                    {% if user == n.author %}
+                                        <td><a class="nav-link" href="{% url 'edit_post' n.pk %}">Изменить</a></td>
+                                    {% else %}
+                                        <td><a class="nav-link" href="{% url 'create_reply' n.pk %}">Откликнуться</a></td>
+                                    {% endif %}
                                 {% endif %}
                             </tr>
                         {% endfor %}
