@@ -43,7 +43,7 @@
             <div class="text-center mt-5">
                 {% block content %}
                     <h1>Все объявления</h1>
-                    {% if news_list %}
+                    {% if posts_list %}
                         <table>
                             <!-- Выводим заголовки столбцов таблицы -->
                             <tr>
@@ -56,6 +56,9 @@
                                 <td>{{ n.title }}</td>
                                 <td>{{ n.creation_time }}</td>
                                 <td>{{ n.content | truncatechars:20 }}</td>
+                                {% if user.is_authenticated %}
+                                    <td><a class="nav-link" href="{% url 'create_reply' n.pk %}">Откликнуться</a></td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </table>
