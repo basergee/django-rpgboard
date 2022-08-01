@@ -3,7 +3,7 @@ from django.views.generic import ListView, CreateView
 from django.contrib.auth.models import User
 
 from .models import Post, UserReply
-from .forms import ReplyForm
+from .forms import ReplyForm, PostForm
 
 
 class IndexView(ListView):
@@ -25,5 +25,18 @@ class CreateUserReplyView(CreateView):
         reply.reply_author = self.request.user
         post_id = int(self.request.path.split('/')[-1])
         reply.post = Post.objects.get(pk=post_id)
+        response = super().form_valid(form)
+        return response
+
+
+class CreatePostView(CreateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'post_create.html'
+    success_url = '/'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.author = self.request.user
         response = super().form_valid(form)
         return response
