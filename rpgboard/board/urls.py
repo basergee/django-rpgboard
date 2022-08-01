@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 
-from .views import IndexView, CreateUserReplyView, CreatePostView
+from .views import IndexView, CreateUserReplyView, CreatePostView, EditPostView
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
@@ -10,6 +10,6 @@ urlpatterns = [
     path('', IndexView.as_view(), name='signup'),
     path('', IndexView.as_view(), name='profile'),
     path('create/', CreatePostView.as_view(), name='create_post'),
-    path('edit/<int:pk>', IndexView.as_view(), name='edit_post'),
+    path('edit/<int:pk>', EditPostView.as_view(), name='edit_post'),
     path('reply/<int:pk>', CreateUserReplyView.as_view(), name='create_reply'),
 ]

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 
@@ -42,3 +42,11 @@ class CreatePostView(LoginRequiredMixin, CreateView):
         post.author = self.request.user
         response = super().form_valid(form)
         return response
+
+
+class EditPostView(LoginRequiredMixin, UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'post_create.html'
+    success_url = '/'
+    login_url = '/login/'
