@@ -24,7 +24,7 @@ class Post(models.Model):
     )
     title = models.TextField()
     content = models.TextField()
-    upload = models.FileField(upload_to='uploads/')
+    upload = models.FileField(upload_to='uploads/', blank=True)
     creation_time = models.DateTimeField(auto_now_add=True)
 
 
