@@ -82,7 +82,9 @@ class UserProfileView(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
 
     def get_queryset(self):
-        return UserReply.objects.filter(reply_author=self.request.user)
+        # Показать отклики на посты, у которых пользователь является автором
+        logged_user = self.request.user
+        return UserReply.objects.filter(post__author=logged_user)
 
 
 def accept_reply(request, **kwargs):
