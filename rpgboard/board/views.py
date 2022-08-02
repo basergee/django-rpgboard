@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 
 from .models import Post, UserReply
-from .forms import ReplyForm, PostForm
+from .forms import ReplyForm, PostForm, UserSignupForm
 
 
 class IndexView(ListView):
@@ -74,6 +74,13 @@ class EditPostView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
         # Если пост с ключом post_id есть среди них, разрешаем редактирование
         return logged_user_posts.filter(pk=post_id).exists()
+
+
+class UserSignupView(CreateView):
+    model = User
+    form_class = UserSignupForm
+    template_name = 'signup.html'
+    success_url = reverse_lazy('index')
 
 
 class UserProfileView(LoginRequiredMixin, ListView):
