@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
@@ -67,3 +68,22 @@ class EditPostView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
         # Если пост с ключом post_id есть среди них, разрешаем редактирование
         return logged_user_posts.filter(pk=post_id).exists()
+
+
+class UserProfileView(LoginRequiredMixin, ListView):
+    template_name = 'profile.html'
+    context_object_name = 'replies_list'
+
+    def get_queryset(self):
+        return UserReply.objects.filter(reply_author=self.request.user)
+
+    def get_login_url(self):
+        return reverse('login')
+
+
+def accept_reply(request, **kwargs):
+    reply_id = request.path.split('/')[-1]
+    reply = UserReply.objects.get(pk=reply_id)
+    reply.is_accepted = True
+    reply.save()
+    return redirect('profile')
