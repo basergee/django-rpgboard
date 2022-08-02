@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView
+from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 
@@ -20,7 +20,7 @@ class CreateUserReplyView(CreateView):
     model = UserReply
     form_class = ReplyForm
     template_name = 'reply_create.html'
-    success_url = '/'
+    success_url = reverse_lazy('index')
 
     def form_valid(self, form):
         reply = form.save(commit=False)
@@ -35,8 +35,8 @@ class CreatePostView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm
     template_name = 'post_create.html'
-    success_url = '/'
-    login_url = '/login/'
+    success_url = reverse_lazy('index')
+    login_url = reverse_lazy('login')
 
     def form_valid(self, form):
         post = form.save(commit=False)
@@ -49,8 +49,8 @@ class EditPostView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     form_class = PostForm
     template_name = 'post_create.html'
-    success_url = '/'
-    login_url = '/login/'
+    success_url = reverse_lazy('index')
+    login_url = reverse_lazy('login')
 
     # Запрещаем авторизованному пользователю править объявления других
     # пользователей. Без этого пользователь мог указать ключ другого
@@ -73,12 +73,10 @@ class EditPostView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class UserProfileView(LoginRequiredMixin, ListView):
     template_name = 'profile.html'
     context_object_name = 'replies_list'
+    login_url = reverse_lazy('login')
 
     def get_queryset(self):
         return UserReply.objects.filter(reply_author=self.request.user)
-
-    def get_login_url(self):
-        return reverse('login')
 
 
 def accept_reply(request, **kwargs):
