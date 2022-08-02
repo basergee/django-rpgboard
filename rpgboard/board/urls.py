@@ -2,7 +2,8 @@ from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 
 from .views import (IndexView, CreateUserReplyView, CreatePostView,
-                    EditPostView, UserProfileView, accept_reply)
+                    EditPostView, UserProfileView, accept_reply,
+                    DeleteUserReplyView)
 
 
 urlpatterns = [
@@ -15,4 +16,5 @@ urlpatterns = [
     path('edit/<int:pk>', EditPostView.as_view(), name='edit_post'),
     path('reply/<int:pk>', CreateUserReplyView.as_view(), name='create_reply'),
     path('accept/<int:pk>', accept_reply, name='accept_reply'),
+    path('delete/<int:pk>', DeleteUserReplyView.as_view(), name='delete_reply'),
 ]

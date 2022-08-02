@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, CreateView, UpdateView
 from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 
@@ -29,6 +29,12 @@ class CreateUserReplyView(CreateView):
         reply.post = Post.objects.get(pk=post_id)
         response = super().form_valid(form)
         return response
+
+
+class DeleteUserReplyView(DeleteView):
+    model = UserReply
+    template_name = 'reply_delete.html'
+    success_url = reverse_lazy('profile')
 
 
 class CreatePostView(LoginRequiredMixin, CreateView):

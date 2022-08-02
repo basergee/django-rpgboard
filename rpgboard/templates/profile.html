@@ -27,7 +27,7 @@
                         {% if not n.is_accepted %}
                             <a class="nav-link" href="{% url 'accept_reply' n.pk %}">Принять</a>
                         {% endif %}
-                        <a class="nav-link" href="{% url 'create_reply' n.pk %}">Удалить</a>
+                        <a class="nav-link" href="{% url 'delete_reply' n.pk %}">Удалить</a>
                     </td>
             {% endif %}
         </tr>
