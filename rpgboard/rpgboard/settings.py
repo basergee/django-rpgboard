@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_apscheduler',
+
     'board',
 ]
 
@@ -144,3 +146,9 @@ EMAIL_HOST_PASSWORD = ''  # пароль от почты
 EMAIL_USE_SSL = True
 
 DEFAULT_FROM_EMAIL = ''  # почта, с которой будут отправляться письма
+
+
+# Настройки для библиотеки django-APSCHEDULER
+
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
+APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
