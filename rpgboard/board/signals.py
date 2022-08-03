@@ -1,6 +1,9 @@
+from datetime import datetime, timedelta
+
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
 from django.contrib.auth.models import User
 
 from rpgboard.settings import DEFAULT_FROM_EMAIL
@@ -46,14 +49,45 @@ def notify_about_new_post(instance, **kwargs):
         # )
 
 
+def generate_confirm_code():
+    chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
+    return get_random_string(4, chars)
+
+
 @receiver(post_save, sender=User)
 def create_user_confirmcodes(sender, instance, created, **kwargs):
     print('*** user create ***')
-    # if created:
-    #     UserConfirmCodes.objects.create(user=instance)
+    if created:
+        # Генерируем код и проверяем его уникальность
+        code = generate_confirm_code()
+        while UserConfirmCodes.objects.filter(code=code).exists():
+            code = generate_confirm_code()
+        expdate = datetime.strftime(
+            datetime.now() + timedelta(minutes=5), "%Y-%m-%d %H:%M:%S"
+        )
+        usc = UserConfirmCodes.objects.create(
+            user=instance,
+            code=code,
+            code_expires=expdate
+        )
+        usc.save()
+
+        # Отправляем код на почту пользователя
+        message = f'Ваш код подтверждения: {code}'
+        to_email = instance.email
+
+        print(message)
+        print('Отправляем на ', to_email)
+
+        # send_mail(
+        #     subject='Код подтверждения',
+        #     message=message,
+        #     from_email=DEFAULT_FROM_EMAIL,
+        #     recipient_list=[f'{to_email}']
+        # )
 
 
 @receiver(post_save, sender=User)
 def save_user_confirmcodes(sender, instance, **kwargs):
     print('*** user save ***')
-    # instance.profile.save()
+    instance.userconfirmcodes.save()

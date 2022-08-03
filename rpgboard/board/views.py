@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import (ListView, CreateView, UpdateView, DeleteView,
@@ -5,7 +7,7 @@ from django.views.generic import (ListView, CreateView, UpdateView, DeleteView,
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 
-from .models import Post, UserReply
+from .models import Post, UserReply, UserConfirmCodes
 from .forms import ReplyForm, PostForm, UserSignupForm, UserConfirmCodeForm
 
 
@@ -94,15 +96,29 @@ class UserSignupView(CreateView):
 class UserConfirmCodeView(FormView):
     template_name = 'confirm.html'
     form_class = UserConfirmCodeForm
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('login')
 
     def form_valid(self, form):
-        if form.cleaned_data['code'] == '321':
-            user = self.request.user
-            # user.is_active = True
-            # user.save()
-            print(user)
-            print('*** Регистрация прошла успешно ***')
+        entered_code = form.cleaned_data['code']
+        if UserConfirmCodes.objects.filter(code=entered_code).exists():
+            code_obj = UserConfirmCodes.objects.get(code=entered_code)
+            user = UserConfirmCodes.objects.get(code=entered_code).user
+            if datetime.now(timezone.utc) <= code_obj.code_expires:
+                # Активируем пользователя, для которого создан код
+                user.is_confirmed = True
+                user.is_active = True
+                user.save()
+                print(user)
+                print('*** Регистрация прошла успешно ***')
+            else:
+                print('*** Код подтверждения истек ***')
+                # Удалим пользователя с этим кодом. Это решение принято для
+                # простоты. В будущем стоит создавать новый код. Сейчас система
+                # не даст отправить новый код, потому что пользователь уже
+                # существует в базе
+                print(f'*** Удаляем неактивированного пользователя '
+                      f'{user.username} ***')
+                user.delete()
         else:
             print('*** Неправильный код подтверждения ***')
         return super().form_valid(form)
