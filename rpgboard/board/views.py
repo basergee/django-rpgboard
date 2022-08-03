@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 
 from .models import Post, UserReply, UserConfirmCodes
 from .forms import ReplyForm, PostForm, UserSignupForm, UserConfirmCodeForm
+from .filters import UserReplyFilter
 
 
 class IndexView(ListView):
@@ -132,7 +133,17 @@ class UserProfileView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         # Показать отклики на посты, у которых пользователь является автором
         logged_user = self.request.user
-        return UserReply.objects.filter(post__author=logged_user)
+        queryset = UserReply.objects.filter(post__author=logged_user)
+
+        # Даем возможность фильтровать отклики по статусы "принят/не принят"
+        self.filterset = UserReplyFilter(self.request.GET, queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Добавляем в контекст объект фильтрации.
+        context['filterset'] = self.filterset
+        return context
 
 
 def accept_reply(request, **kwargs):
