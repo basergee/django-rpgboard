@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import (ListView, CreateView, UpdateView, DeleteView,
+                                  FormView)
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 
 from .models import Post, UserReply
-from .forms import ReplyForm, PostForm, UserSignupForm
+from .forms import ReplyForm, PostForm, UserSignupForm, UserConfirmCodeForm
 
 
 class IndexView(ListView):
@@ -80,6 +81,12 @@ class UserSignupView(CreateView):
     model = User
     form_class = UserSignupForm
     template_name = 'signup.html'
+    success_url = reverse_lazy('confirm_code')
+
+
+class UserConfirmCodeView(FormView):
+    template_name = 'confirm.html'
+    form_class = UserConfirmCodeForm
     success_url = reverse_lazy('index')
 
 

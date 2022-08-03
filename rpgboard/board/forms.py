@@ -34,3 +34,7 @@ class UserSignupForm(UserCreationForm):
                   "password1",
                   "password2",
                   )
+
+
+class UserConfirmCodeForm(forms.Form):
+    code = forms.CharField(max_length=4)

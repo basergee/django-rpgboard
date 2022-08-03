@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 
 from .views import (IndexView, CreateUserReplyView, CreatePostView,
                     EditPostView, UserProfileView, accept_reply,
-                    DeleteUserReplyView, UserSignupView)
+                    DeleteUserReplyView, UserSignupView, UserConfirmCodeView)
 
 
 urlpatterns = [
@@ -17,4 +17,5 @@ urlpatterns = [
     path('reply/<int:pk>', CreateUserReplyView.as_view(), name='create_reply'),
     path('accept/<int:pk>', accept_reply, name='accept_reply'),
     path('delete/<int:pk>', DeleteUserReplyView.as_view(), name='delete_reply'),
+    path('confirm/', UserConfirmCodeView.as_view(), name='confirm_code'),
 ]
