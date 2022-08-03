@@ -4,7 +4,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import User
 
 from rpgboard.settings import DEFAULT_FROM_EMAIL
-from .models import UserReply, Post, Profile
+from .models import UserReply, Post, UserConfirmCodes
 
 
 @receiver(post_save, sender=UserReply)
@@ -47,14 +47,13 @@ def notify_about_new_post(instance, **kwargs):
 
 
 @receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
+def create_user_confirmcodes(sender, instance, created, **kwargs):
     print('*** user create ***')
     # if created:
-    #     Profile.objects.create(user=instance)
+    #     UserConfirmCodes.objects.create(user=instance)
 
 
 @receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
+def save_user_confirmcodes(sender, instance, **kwargs):
     print('*** user save ***')
     # instance.profile.save()
-

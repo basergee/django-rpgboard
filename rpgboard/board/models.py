@@ -44,7 +44,7 @@ class UserReply(models.Model):
     creation_time = models.DateTimeField(auto_now_add=True)
 
 
-class Profile(models.Model):
+class UserConfirmCodes(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_confirmed = models.BooleanField(default=False)
     code = models.CharField(max_length=4)
