@@ -90,4 +90,9 @@ def create_user_confirmcodes(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_confirmcodes(sender, instance, **kwargs):
     print('*** user save ***')
-    instance.userconfirmcodes.save()
+    if not instance.is_active:
+        # Добавил это условие из-за того, что при авторизации единственным
+        # самым первым пользователем (admin) вылетело исключение, сообщающее,
+        # что userconfirmcodes не существует. Самый первый пользователь был
+        # создан не через форму регистрации, поэтому с ним нет связанного кода
+        instance.userconfirmcodes.save()
