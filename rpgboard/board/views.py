@@ -83,11 +83,29 @@ class UserSignupView(CreateView):
     template_name = 'signup.html'
     success_url = reverse_lazy('confirm_code')
 
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+        print("*** Подтвердите регистрацию, введя код из письма ***")
+        return super().form_valid(form)
+
 
 class UserConfirmCodeView(FormView):
     template_name = 'confirm.html'
     form_class = UserConfirmCodeForm
     success_url = reverse_lazy('index')
+
+    def form_valid(self, form):
+        if form.cleaned_data['code'] == '321':
+            user = self.request.user
+            # user.is_active = True
+            # user.save()
+            print(user)
+            print('*** Регистрация прошла успешно ***')
+        else:
+            print('*** Неправильный код подтверждения ***')
+        return super().form_valid(form)
 
 
 class UserProfileView(LoginRequiredMixin, ListView):
