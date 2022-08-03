@@ -135,3 +135,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login/'
 LOGIN_REDIRECT_URL = '/'
+
+
+EMAIL_HOST = 'smtp.yandex.ru'  # адрес сервера Яндекс-почты
+EMAIL_PORT = 465  # порт smtp сервера
+EMAIL_HOST_USER = ''  # имя пользователя
+EMAIL_HOST_PASSWORD = ''  # пароль от почты
+EMAIL_USE_SSL = True
