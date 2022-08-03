@@ -142,3 +142,5 @@ EMAIL_PORT = 465  # порт smtp сервера
 EMAIL_HOST_USER = ''  # имя пользователя
 EMAIL_HOST_PASSWORD = ''  # пароль от почты
 EMAIL_USE_SSL = True
+
+DEFAULT_FROM_EMAIL = ''  # почта, с которой будут отправляться письма
