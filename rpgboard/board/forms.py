@@ -14,6 +14,8 @@ class ReplyForm(forms.ModelForm):
 
 
 class PostForm(forms.ModelForm):
+    upload = forms.FileField(label='Выберите файл', help_text='max 40 mb',
+                             required=False)
     class Meta:
         model = Post
         fields = [

@@ -51,6 +51,7 @@ class CreatePostView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.author = self.request.user
+        post.upload = self.request.FILES['upload']
         response = super().form_valid(form)
         return response
 
