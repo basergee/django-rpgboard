@@ -11,6 +11,26 @@ from .models import UserReply, Post, UserConfirmCodes
 
 
 @receiver(post_save, sender=UserReply)
+def notify_author_when_reply_is_created(instance, created, **kwargs):
+    if created:
+        author = instance.post.author.username
+        email_to = instance.post.author.email
+        title = instance.post.title
+        message = f'Здравствуйте, {author}. На ваше объявление с заголовком ' \
+                  f'\"{title}\" получен отклик. Посмотреть и принять или ' \
+                  f'удалить отклик Вы можете в Личном кабинете'
+
+        print(message)
+
+        # send_mail(
+        #     subject='Новый отклик',
+        #     message=message,
+        #     from_email=DEFAULT_FROM_EMAIL,
+        #     recipient_list=[f'{email_to}']
+        # )
+
+
+@receiver(post_save, sender=UserReply)
 def notify_when_reply_accepted(instance, **kwargs):
     if instance.is_accepted:
         # Отправим сообщение пользователю, оставившему отклик
