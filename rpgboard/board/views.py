@@ -13,11 +13,11 @@ from .filters import UserReplyFilter
 
 
 class IndexView(ListView):
-    template_name = 'default.html'
+    template_name = 'index.html'
     model = Post
     context_object_name = 'posts_list'
     # Ограничиваем количество новостей на странице
-    paginate_by = 10
+    paginate_by = 2
 
 
 class CreateUserReplyView(CreateView):
@@ -51,7 +51,7 @@ class CreatePostView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.author = self.request.user
-        post.upload = self.request.FILES['upload']
+        post.upload = self.request.FILES.get('upload')
         response = super().form_valid(form)
         return response
 
