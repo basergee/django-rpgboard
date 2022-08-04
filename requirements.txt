@@ -1,3 +1,4 @@
 Django>=4.0
 django-filter>=21.1
 django-apscheduler>=0.6.2
+django-tinymce>=3.4.0

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from tinymce.widgets import TinyMCE
 
 from .models import UserReply, Post
 
@@ -16,6 +17,8 @@ class ReplyForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     upload = forms.FileField(label='Выберите файл', help_text='max 40 mb',
                              required=False)
+    content = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 30}))
+
     class Meta:
         model = Post
         fields = [

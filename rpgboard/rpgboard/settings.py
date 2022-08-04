@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'django_apscheduler',
     'django_filters',
+    'tinymce',
 
     'board',
 ]
