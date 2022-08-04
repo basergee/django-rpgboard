@@ -1,4 +1,4 @@
-{% extends "default.html" %}
+{% extends "index.html" %}
 
 {% block title %}
 Личный кабинет
@@ -13,54 +13,34 @@
 </form>
 
 {% if replies_list %}
-    <table>
-        <!-- Выводим заголовки столбцов таблицы -->
-        <tr>
-            <th>Дата отклика</th>
-            <th>Содержание</th>
-        </tr>
-    {% for n in replies_list %}
-        <tr>
-            <td>
-                {% if n.is_accepted %}
-                    &check;
-                {% endif %}
-                {{ n.creation_time }}
-            </td>
-            <td>{{ n.content | truncatechars:20 }}</td>
-            {% if user.is_authenticated %}
-                    <td>
-                        {% if not n.is_accepted %}
-                            <a class="nav-link" href="{% url 'accept_reply' n.pk %}">Принять</a>
+    {% for reply in replies_list %}
+        <div class="col-md-6 infinite-item">
+            <div class="card mb-4 shadow-sm">
+                <!--<img class="img-thumbnail"  src="{{post.image.url}}"/> -->
+                <div class="card-body">
+                    <h5>
+                        {% if reply.is_accepted %}
+                            &check;
                         {% endif %}
-                        <a class="nav-link" href="{% url 'delete_reply' n.pk %}">Удалить</a>
-                    </td>
-            {% endif %}
-        </tr>
+                        {{reply.post.title}}
+                    </h5>
+                    {{ reply.creation_time }}
+                    <p class="card-text">
+                        {{reply.content|truncatewords:20}}
+                        {% if user.is_authenticated %}
+                            {% if not reply.is_accepted %}
+                                <a class="nav-link" href="{% url 'accept_reply' reply.pk %}">Принять</a>
+                            {% endif %}
+                                <a class="nav-link" href="{% url 'delete_reply' reply.pk %}">Удалить</a>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
     {% endfor %}
-    </table>
+
 {% else %}
 <h2>Откликов нет!</h2>
 {% endif %}
 
-{# Информация о предыдущих страницах #}
-{% if page_obj.has_previous %}
-    <a href="?page=1">1</a>
-    {% if page_obj.previous_page_number != 1 %}
-        ...
-        <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
-    {% endif %}
-{% endif %}
-
-{# Информация о текущей странице #}
-{{ page_obj.number }}
-
-{# Информация о следующих страницах #}
-{% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
-    {% if paginator.num_pages != page_obj.next_page_number %}
-        ...
-        <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
-    {% endif %}
-{% endif %}
 {% endblock content %}
