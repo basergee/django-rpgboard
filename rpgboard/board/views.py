@@ -95,7 +95,7 @@ class UserSignupView(CreateView):
         user = form.save(commit=False)
         user.is_active = False
         user.save()
-        logger.info("*** Подтвердите регистрацию, введя код из письма ***")
+        logger.info("Подтвердите регистрацию, введя код из письма")
         return super().form_valid(form)
 
 
@@ -115,15 +115,15 @@ class UserConfirmCodeView(FormView):
                 user.is_active = True
                 user.save()
                 logger.info(user)
-                logger.info('*** Регистрация прошла успешно ***')
+                logger.info('Регистрация прошла успешно')
             else:
-                logger.info('*** Код подтверждения истек ***')
+                logger.info('Код подтверждения истек')
                 # Удалим пользователя с этим кодом. Это решение принято для
                 # простоты. В будущем стоит создавать новый код. Сейчас система
                 # не даст отправить новый код, потому что пользователь уже
                 # существует в базе
-                logger.info(f'*** Удаляем неактивированного пользователя '
-                      f'{user.username} ***')
+                logger.info(f'Удаляем неактивированного пользователя '
+                            f'{user.username}')
                 user.delete()
         else:
             logger.info('*** Неправильный код подтверждения ***')

@@ -80,7 +80,7 @@ def generate_confirm_code():
 
 @receiver(post_save, sender=User)
 def create_user_confirmcodes(sender, instance, created, **kwargs):
-    logger.info('*** user create ***')
+    logger.info('user create')
     if created:
         # Генерируем код и проверяем его уникальность
         code = generate_confirm_code()
@@ -113,7 +113,7 @@ def create_user_confirmcodes(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_confirmcodes(sender, instance, **kwargs):
-    logger.info('*** user save ***')
+    logger.info('user save')
     if not instance.is_active:
         # Добавил это условие из-за того, что при авторизации единственным
         # самым первым пользователем (admin) вылетело исключение, сообщающее,
