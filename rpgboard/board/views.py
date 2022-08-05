@@ -22,6 +22,7 @@ class IndexView(ListView):
     context_object_name = 'posts_list'
     # Ограничиваем количество новостей на странице
     paginate_by = 2
+    ordering = '-creation_time'
 
 
 class CreateUserReplyView(CreateView):
