@@ -154,3 +154,24 @@ DEFAULT_FROM_EMAIL = ''  # почта, с которой будут отправ
 
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    # Define the handlers
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}

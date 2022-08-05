@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timezone
 
 from django.shortcuts import render, redirect
@@ -10,6 +11,9 @@ from django.contrib.auth.models import User
 from .models import Post, UserReply, UserConfirmCodes
 from .forms import ReplyForm, PostForm, UserSignupForm, UserConfirmCodeForm
 from .filters import UserReplyFilter
+
+
+logger = logging.getLogger(__name__)
 
 
 class IndexView(ListView):
@@ -91,7 +95,7 @@ class UserSignupView(CreateView):
         user = form.save(commit=False)
         user.is_active = False
         user.save()
-        print("*** Подтвердите регистрацию, введя код из письма ***")
+        logger.info("*** Подтвердите регистрацию, введя код из письма ***")
         return super().form_valid(form)
 
 
@@ -110,19 +114,19 @@ class UserConfirmCodeView(FormView):
                 user.is_confirmed = True
                 user.is_active = True
                 user.save()
-                print(user)
-                print('*** Регистрация прошла успешно ***')
+                logger.info(user)
+                logger.info('*** Регистрация прошла успешно ***')
             else:
-                print('*** Код подтверждения истек ***')
+                logger.info('*** Код подтверждения истек ***')
                 # Удалим пользователя с этим кодом. Это решение принято для
                 # простоты. В будущем стоит создавать новый код. Сейчас система
                 # не даст отправить новый код, потому что пользователь уже
                 # существует в базе
-                print(f'*** Удаляем неактивированного пользователя '
+                logger.info(f'*** Удаляем неактивированного пользователя '
                       f'{user.username} ***')
                 user.delete()
         else:
-            print('*** Неправильный код подтверждения ***')
+            logger.info('*** Неправильный код подтверждения ***')
         return super().form_valid(form)
 
 

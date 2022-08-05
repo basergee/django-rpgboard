@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timedelta
 
 from django.db.models.signals import post_save
@@ -10,6 +11,9 @@ from rpgboard.settings import DEFAULT_FROM_EMAIL
 from .models import UserReply, Post, UserConfirmCodes
 
 
+logger = logging.getLogger(__name__)
+
+
 @receiver(post_save, sender=UserReply)
 def notify_author_when_reply_is_created(instance, created, **kwargs):
     if created:
@@ -20,7 +24,7 @@ def notify_author_when_reply_is_created(instance, created, **kwargs):
                   f'\"{title}\" получен отклик. Посмотреть и принять или ' \
                   f'удалить отклик Вы можете в Личном кабинете'
 
-        print(message)
+        logger.info(message)
 
         # send_mail(
         #     subject='Новый отклик',
@@ -37,10 +41,10 @@ def notify_when_reply_accepted(instance, **kwargs):
         reply_author = instance.reply_author.username
         reply_author_email = instance.reply_author.email
 
-        print(reply_author)
-        print(reply_author_email)
-        print(f'Здравствуйте, {reply_author}. Ваш отклик на объявление '
-              f'\"{instance.post.title}\" принят')
+        logger.info(reply_author)
+        logger.info(reply_author_email)
+        logger.info(f'Здравствуйте, {reply_author}. Ваш отклик на объявление '
+                    f'\"{instance.post.title}\" принят')
 
         # send_mail(
         #     subject='Отклик принят',
@@ -59,7 +63,7 @@ def notify_about_new_post(instance, **kwargs):
             continue
         message = f'Здравствуйте, {u.username}. Появилось новое объявление: ' \
                   f'{instance.title}\n\n{instance.content}'
-        print(message)
+        logger.info(message)
 
         # send_mail(
         #     subject='Новое объявление',
@@ -76,7 +80,7 @@ def generate_confirm_code():
 
 @receiver(post_save, sender=User)
 def create_user_confirmcodes(sender, instance, created, **kwargs):
-    print('*** user create ***')
+    logger.info('*** user create ***')
     if created:
         # Генерируем код и проверяем его уникальность
         code = generate_confirm_code()
@@ -96,8 +100,8 @@ def create_user_confirmcodes(sender, instance, created, **kwargs):
         message = f'Ваш код подтверждения: {code}'
         to_email = instance.email
 
-        print(message)
-        print('Отправляем на ', to_email)
+        logger.info(message)
+        logger.info(f'Отправляем на {to_email}')
 
         # send_mail(
         #     subject='Код подтверждения',
@@ -109,7 +113,7 @@ def create_user_confirmcodes(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=User)
 def save_user_confirmcodes(sender, instance, **kwargs):
-    print('*** user save ***')
+    logger.info('*** user save ***')
     if not instance.is_active:
         # Добавил это условие из-за того, что при авторизации единственным
         # самым первым пользователем (admin) вылетело исключение, сообщающее,
